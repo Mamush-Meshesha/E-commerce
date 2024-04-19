@@ -63,8 +63,8 @@ const {userInfo } = useSelector((state) => state.auth)
           {error?.data?.message || error.error}
         </Message>
       ) : (
-            <>
-              <Meta title={product.name}/>
+        <>
+          <Meta title={product.name} />
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />
@@ -121,15 +121,14 @@ const {userInfo } = useSelector((state) => state.auth)
                             value={qty}
                             onChange={(e) => setQty(Number(e.target.value))}
                           >
-                            {[
-                              ...Array(product.countInStock)
-                                .keys()
-                                .map((x) => (
-                                  <option key={x + 1} value={x + 1}>
-                                    {x + 1}
-                                  </option>
-                                )),
-                            ]}
+                            {Array.from(
+                              { length: product.countInStock },
+                              (_, index) => (
+                                <option key={index + 1} value={index + 1}>
+                                  {index + 1}
+                                </option>
+                              )
+                            )}
                           </Form.Control>
                         </Col>
                       </Row>
@@ -193,7 +192,7 @@ const {userInfo } = useSelector((state) => state.auth)
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button 
+                      <Button
                         disabled={loadingProductReview}
                         type="submit"
                         variant="primary"
