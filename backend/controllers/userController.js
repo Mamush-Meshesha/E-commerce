@@ -94,9 +94,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
             email: user.email,
             isAdmin: user.isAdmin
         })
-    } else P
-    res.status(404)
-    throw new Error("user not found")
+    } else {
+        res.status(404)
+        throw new Error("user not found")
+    }
 })
 
 // update user profile
