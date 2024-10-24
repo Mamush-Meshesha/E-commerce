@@ -4,13 +4,13 @@ const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 8;
 
   const page = Number(req.query.pageNumber) || 1;
-    const keyword = req.query.keyword
-      ? { name: { $regex: req.query.keyword, $options: "i" } }
-      : {};
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: "i" } }
+    : {};
 
-  const count = await Product.countDocuments({...keyword});
+  const count = await Product.countDocuments({ ...keyword });
 
-  const products = await Product.find({...keyword})
+  const products = await Product.find({ ...keyword })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
   res.json({ products, page, pages: Math.ceil(count / pageSize) });
@@ -39,20 +39,27 @@ const deleteProduct = asyncHandler(async (req, res) => {
 });
 
 const createProduct = asyncHandler(async (req, res) => {
-  const product = new Product({
-    name: "sample name",
-    price: 0,
-    user: req.user._id,
-    image: "/images/sample.jpg",
-    brand: "sample brand",
-    category: "sample category",
-    countInStock: 0,
-    numReviews: 0,
-    description: "sample description",
-  });
+  try {
+    const { name, price, brand, category, image, countInStock, description } =
+      req.body;
 
-  const createdProduct = await product.save();
-  res.status(201).json(createdProduct);
+    const product = new Product({
+      name: name || "sample name",
+      price: price || 0,
+      user: req.user._id,
+      image: image || "/images/sample.png",
+      brand: brand || "sample brand",
+      category: category || "sample category",
+      countInStock: countInStock || 0,
+      numReviews: 0,
+      description: description || "sample description",
+    });
+
+    const createdProduct = await product.save();
+    res.status(201).json(createdProduct);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating product", error });
+  }
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
@@ -61,19 +68,19 @@ const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    (product.name = name),
-      (product.price = price),
-      (product.description = description),
-      (product.image = image),
-      (product.brand = brand),
-      (product.category = category),
-      (product.countInStock = countInStock);
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.image = image; 
+    product.brand = brand;
+    product.category = category;
+    product.countInStock = countInStock;
 
     const updatedProduct = await product.save();
-    res.status(`201`).json(updatedProduct);
+    res.status(201).json(updatedProduct);
   } else {
     res.status(404);
-    throw new Error("product not found");
+    throw new Error("Product not found");
   }
 });
 
@@ -114,11 +121,10 @@ const createProductReview = asyncHandler(async (req, res) => {
 
 // carousel
 const getTopProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ rating: -1 }).limit(3)
-  
-  res.status(200).json(products)
-})
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
 
+  res.status(200).json(products);
+});
 
 export {
   getProducts,
