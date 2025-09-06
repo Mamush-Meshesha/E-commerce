@@ -5,6 +5,20 @@ const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY || "sk_test_your_stripe_secret_key_here"
 );
 
+// Debug: Log the secret key being used (first 10 chars for security)
+console.log("Environment variables loaded:");
+console.log("STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
+console.log(
+  "STRIPE_PUBLISHABLE_KEY exists:",
+  !!process.env.STRIPE_PUBLISHABLE_KEY
+);
+console.log(
+  "Stripe Secret Key being used:",
+  process.env.STRIPE_SECRET_KEY
+    ? process.env.STRIPE_SECRET_KEY.substring(0, 10) + "..."
+    : "Using fallback key"
+);
+
 // @desc    Create payment intent
 // @route   POST /api/stripe/create-payment-intent
 // @access  Public (for testing)
