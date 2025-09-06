@@ -49,14 +49,16 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
 
   const createPaymentIntent = async () => {
     try {
+      console.log("Creating payment intent for amount:", numericAmount);
       const response = await fetch(
         "http://localhost:5000/api/stripe/create-payment-intent",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // Authorization: `Bearer ${localStorage.getItem("token")}`, // Temporarily removed for testing
           },
+          credentials: "omit", // Don't send cookies
           body: JSON.stringify({
             amount: numericAmount,
             currency: "usd",
@@ -64,7 +66,17 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         }
       );
 
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log("Payment intent created:", data);
       setClientSecret(data.clientSecret);
     } catch (error) {
       console.error("Error creating payment intent:", error);

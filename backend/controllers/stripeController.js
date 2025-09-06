@@ -1,13 +1,16 @@
-import Stripe from 'stripe';
-import asyncHandler from '../middleware/asyncHandler.js';
+import Stripe from "stripe";
+import asyncHandler from "../middleware/asyncHandler.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_your_stripe_secret_key_here');
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY || "sk_test_your_stripe_secret_key_here"
+);
 
 // @desc    Create payment intent
 // @route   POST /api/stripe/create-payment-intent
-// @access  Private
+// @access  Public (for testing)
 export const createPaymentIntent = asyncHandler(async (req, res) => {
-  const { amount, currency = 'usd' } = req.body;
+  console.log("Creating payment intent with:", req.body);
+  const { amount, currency = "usd" } = req.body;
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
@@ -22,9 +25,9 @@ export const createPaymentIntent = asyncHandler(async (req, res) => {
       clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
-    console.error('Error creating payment intent:', error);
+    console.error("Error creating payment intent:", error);
     res.status(400).json({
-      message: 'Error creating payment intent',
+      message: "Error creating payment intent",
       error: error.message,
     });
   }
@@ -38,15 +41,15 @@ export const confirmPayment = asyncHandler(async (req, res) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    
+
     res.json({
       status: paymentIntent.status,
       paymentIntent,
     });
   } catch (error) {
-    console.error('Error confirming payment:', error);
+    console.error("Error confirming payment:", error);
     res.status(400).json({
-      message: 'Error confirming payment',
+      message: "Error confirming payment",
       error: error.message,
     });
   }
@@ -57,6 +60,8 @@ export const confirmPayment = asyncHandler(async (req, res) => {
 // @access  Public
 export const getStripeConfig = asyncHandler(async (req, res) => {
   res.json({
-    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || 'pk_test_your_stripe_publishable_key_here',
+    publishableKey:
+      process.env.STRIPE_PUBLISHABLE_KEY ||
+      "pk_test_your_stripe_publishable_key_here",
   });
 });
