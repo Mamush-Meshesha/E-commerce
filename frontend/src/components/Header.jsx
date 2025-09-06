@@ -151,46 +151,46 @@ const Header = () => {
                 <SearchBox />
               </motion.div>
 
-              <LinkContainer to="/cart">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Nav.Link className="position-relative d-flex align-items-center">
-                    <FaShoppingCart className="me-2" />
-                    <span>Cart</span>
-                    <AnimatePresence>
-                      {cartItems.length > 0 && (
-                        <motion.div
-                          variants={cartBadgeVariants}
-                          initial="initial"
-                          animate="animate"
-                          whileHover="hover"
-                          className="position-absolute top-0 start-100 translate-middle"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/cart")}
+                style={{ cursor: "pointer" }}
+              >
+                <Nav.Link className="position-relative d-flex align-items-center">
+                  <FaShoppingCart className="me-2" />
+                  <span>Cart</span>
+                  <AnimatePresence>
+                    {cartItems.length > 0 && (
+                      <motion.div
+                        variants={cartBadgeVariants}
+                        initial="initial"
+                        animate="animate"
+                        whileHover="hover"
+                        className="position-absolute top-0 start-100 translate-middle"
+                      >
+                        <Badge
+                          pill
+                          bg="success"
+                          className="px-2 py-1"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+                            fontSize: "0.7rem",
+                            minWidth: "20px",
+                            height: "20px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
                         >
-                          <Badge
-                            pill
-                            bg="success"
-                            className="px-2 py-1"
-                            style={{
-                              background:
-                                "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
-                              fontSize: "0.7rem",
-                              minWidth: "20px",
-                              height: "20px",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            {cartItems.reduce((a, c) => a + c.qty, 0)}
-                          </Badge>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Nav.Link>
-                </motion.div>
-              </LinkContainer>
+                          {cartItems.reduce((a, c) => a + c.qty, 0)}
+                        </Badge>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Nav.Link>
+              </motion.div>
 
               {userInfo ? (
                 <motion.div

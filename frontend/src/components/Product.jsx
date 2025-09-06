@@ -2,13 +2,32 @@ import { Card, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaShoppingCart, FaHeart, FaEye } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../slices/cartSlice";
+import { toast } from "react-toastify";
 import Rating from "./Rating";
 
 const Product = ({ product, index = 0 }) => {
+  const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.cart);
+
   // Safety check for product data
   if (!product || typeof product !== "object") {
     return null;
   }
+
+  const addToCartHandler = () => {
+    const existItem = cartItems.find((x) => x.product === product._id);
+    const qty = existItem ? existItem.qty + 1 : 1;
+
+    if (product.countInStock < qty) {
+      toast.error("Product is out of stock");
+      return;
+    }
+
+    dispatch(addToCart({ ...product, qty }));
+    toast.success("Product added to cart");
+  };
   const cardVariants = {
     hidden: {
       opacity: 0,
@@ -189,14 +208,20 @@ const Product = ({ product, index = 0 }) => {
               className="btn btn-primary btn-sm"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={addToCartHandler}
+              disabled={product.countInStock === 0}
               style={{
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                background:
+                  product.countInStock === 0
+                    ? "linear-gradient(135deg, #6c757d 0%, #495057 100%)"
+                    : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                 border: "none",
                 borderRadius: "20px",
                 padding: "0.5rem 1rem",
+                cursor: product.countInStock === 0 ? "not-allowed" : "pointer",
               }}
             >
-              Add to Cart
+              {product.countInStock === 0 ? "Out of Stock" : "Add to Cart"}
             </motion.button>
           </div>
         </Card.Body>

@@ -6,7 +6,7 @@ import Message from "./message";
 import { useGetTopProductsQuery } from "../slices/productApiSlice";
 
 const ProductCarousel = () => {
-  const { data: products, isLoading, error } = useGetTopProductsQuery();
+  const { data: products, error } = useGetTopProductsQuery();
 
   // Use API data directly
   const displayProducts = products;
@@ -78,14 +78,7 @@ const ProductCarousel = () => {
     },
   };
 
-    return isLoading ? (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "400px" }}
-    >
-      <div className="loading-spinner"></div>
-    </div>
-  ) : error ? (
+  return error ? (
     <Message variant="danger">
       {error?.data?.message || error?.message || "An error occurred"}
     </Message>
@@ -108,8 +101,8 @@ const ProductCarousel = () => {
         {displayProducts &&
           Array.isArray(displayProducts) &&
           displayProducts.map((product, index) => (
-          <Carousel.Item
-            key={product._id}
+            <Carousel.Item
+              key={product._id}
               className="carousel-item-modern position-relative"
               style={{ height: "500px" }}
             >
@@ -118,12 +111,12 @@ const ProductCarousel = () => {
                   to={`/product/${product._id}`}
                   className="text-decoration-none"
                 >
-              <Image
+                  <Image
                     src={
                       product.image || "https://picsum.photos/800/500?random=99"
                     }
                     alt={product.name || "Product"}
-                fluid
+                    fluid
                     className="w-100 h-100"
                     style={{
                       height: "500px",
@@ -192,7 +185,7 @@ const ProductCarousel = () => {
                             }}
                           >
                             ${product.price || 0}
-                </h2>
+                          </h2>
 
                           {/* Description */}
                           <p
@@ -281,8 +274,8 @@ const ProductCarousel = () => {
                   }}
                 />
               </div>
-          </Carousel.Item>
-        ))}
+            </Carousel.Item>
+          ))}
       </Carousel>
     </motion.div>
   );

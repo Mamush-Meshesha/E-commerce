@@ -12,6 +12,7 @@ dotenv.config();
 
 import productRoute from "./routes/productRoute.js";
 import userRoute from "./routes/userRoute.js";
+import stripeRoute from "./routes/stripeRoutes.js";
 import upload from "./multer.js";
 
 connectDB();
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
 app.use("/api/orders", orderRoute);
+app.use("/api/stripe", stripeRoute);
 // app.use("/api/upload", uploadRoute)
 
 app.get("/api/config/paypal", (req, res) =>
