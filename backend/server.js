@@ -1,12 +1,13 @@
-import path from "path"
+import path from "path";
 import connectDB from "./config/db.js";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import orderRoute from "./routes/orderRoute.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { uploads } from "./cloudinary.js";
-import fs from "fs"
+import fs from "fs";
 dotenv.config();
 
 import productRoute from "./routes/productRoute.js";
@@ -14,38 +15,47 @@ import userRoute from "./routes/userRoute.js";
 import upload from "./multer.js";
 
 connectDB();
-const PORT = process.env.PORT || "nothing";
+const PORT = process.env.PORT || 5000;
 const app = express();
+
+// CORS configuration
+app.use(
+  cors({
+    origin: true, // Allow all origins for development
+    credentials: true,
+  })
+);
 
 //body parser
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-app.use(cookieParser())
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
-app.use("/api/orders", orderRoute)
+app.use("/api/orders", orderRoute);
 // app.use("/api/upload", uploadRoute)
 
-app.get("/api/config/paypal", (req,res) => res.send({clientId: process.env.PAYPAL_CLIENT_ID}))
+app.get("/api/config/paypal", (req, res) =>
+  res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
+);
 
-const __dirname = path.resolve()
+const __dirname = path.resolve();
 // app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
 
-if (process.env.NODE_ENV==="production") {
-  app.use(express.static(path.join(__dirname, "/frontend/build")))
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-  })
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+  });
 } else {
   app.get("/", (req, res) => {
-    res.send("API is running....")
-  })
-  
+    res.send("API is running....");
+  });
 }
 
 app.post("/api/upload", upload.array("file"), async (req, res) => {
-  console.log(req.files); 
+  console.log(req.files);
   const uploader = async (path) => await uploads(path, "file");
 
   if (req.method === "POST") {
@@ -68,10 +78,8 @@ app.post("/api/upload", upload.array("file"), async (req, res) => {
   }
 });
 
-
 app.use(notFound);
 app.use(errorHandler);
-
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
