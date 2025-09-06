@@ -6,16 +6,27 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { Button, Card, Alert } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { FaCreditCard, FaSpinner, FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 // Initialize Stripe with publishable key from environment variables
-const stripePromise = loadStripe(
+const stripePublishableKey =
   process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
-    "pk_test_your_stripe_publishable_key_here"
-);
+  "pk_test_your_stripe_publishable_key_here";
+
+// Add validation to prevent undefined key
+if (
+  !stripePublishableKey ||
+  stripePublishableKey === "pk_test_your_stripe_publishable_key_here"
+) {
+  console.warn(
+    "Stripe publishable key not found. Please set REACT_APP_STRIPE_PUBLISHABLE_KEY in your .env file"
+  );
+}
+
+const stripePromise = loadStripe(stripePublishableKey);
 
 const cardElementOptions = {
   style: {
@@ -51,7 +62,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
     try {
       console.log("Creating payment intent for amount:", numericAmount);
       const response = await fetch(
-        "http://localhost:5000/api/stripe/create-payment-intent",
+        "https://e-commerce-e0of.onrender.com/api/stripe/create-payment-intent",
         {
           method: "POST",
           headers: {

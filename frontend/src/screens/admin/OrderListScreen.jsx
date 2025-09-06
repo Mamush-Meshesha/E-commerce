@@ -10,7 +10,7 @@ const OrderListScreen = () => {
   const { data, isLoading, error } = useGetOrdersQuery();
 
   // Extract orders array from the API response
-  const orders = data?.orders || [];
+  const orders = data || [];
 
   const containerVariants = {
     hidden: { opacity: 0 },

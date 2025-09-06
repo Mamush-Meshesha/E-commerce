@@ -101,25 +101,25 @@ const ProductCarousel = () => {
         {displayProducts &&
           Array.isArray(displayProducts) &&
           displayProducts.map((product, index) => (
-            <Carousel.Item
-              key={product._id}
+          <Carousel.Item
+            key={product._id}
               className="carousel-item-modern position-relative"
-              style={{ height: "500px" }}
+              style={{ height: "clamp(300px, 50vh, 500px)" }}
             >
               <div className="position-relative h-100">
                 <Link
                   to={`/product/${product._id}`}
                   className="text-decoration-none"
                 >
-                  <Image
+              <Image
                     src={
                       product.image || "https://picsum.photos/800/500?random=99"
                     }
                     alt={product.name || "Product"}
-                    fluid
+                fluid
                     className="w-100 h-100"
                     style={{
-                      height: "500px",
+                      height: "clamp(300px, 50vh, 500px)",
                       objectFit: "cover",
                       transition: "transform 0.5s ease",
                     }}
@@ -145,14 +145,14 @@ const ProductCarousel = () => {
                 >
                   <div className="container">
                     <div className="row">
-                      <div className="col-lg-6">
+                      <div className="col-12 col-md-8 col-lg-6">
                         <motion.div variants={captionVariants}>
                           {/* Badge */}
                           <Badge
                             bg="success"
                             className="mb-3 px-3 py-2"
                             style={{
-                              fontSize: "0.9rem",
+                              fontSize: "0.8rem",
                               background:
                                 "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
                               animation: "pulse 2s infinite",
@@ -166,7 +166,7 @@ const ProductCarousel = () => {
                           <h1
                             className="text-white mb-3"
                             style={{
-                              fontSize: "3rem",
+                              fontSize: "clamp(1.5rem, 4vw, 3rem)",
                               fontWeight: "700",
                               textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
                               lineHeight: "1.2",
@@ -179,19 +179,19 @@ const ProductCarousel = () => {
                           <h2
                             className="text-white mb-3"
                             style={{
-                              fontSize: "2.5rem",
+                              fontSize: "clamp(1.2rem, 3vw, 2.5rem)",
                               fontWeight: "600",
                               textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
                             }}
                           >
                             ${product.price || 0}
-                          </h2>
+                </h2>
 
                           {/* Description */}
                           <p
-                            className="text-white mb-4"
+                            className="text-white mb-4 d-none d-md-block"
                             style={{
-                              fontSize: "1.2rem",
+                              fontSize: "clamp(0.9rem, 2vw, 1.2rem)",
                               textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
                               maxWidth: "500px",
                               lineHeight: "1.6",
@@ -202,24 +202,28 @@ const ProductCarousel = () => {
                           </p>
 
                           {/* Action Buttons */}
-                          <div className="d-flex gap-3">
+                          <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3">
                             <motion.div variants={buttonVariants}>
                               <Button
                                 as={Link}
                                 to={`/product/${product._id}`}
                                 variant="light"
                                 size="lg"
-                                className="px-4 py-3 rounded-pill fw-bold"
+                                className="px-3 px-md-4 py-2 py-md-3 rounded-pill fw-bold"
                                 whileHover="hover"
                                 style={{
                                   background: "white",
                                   color: "#667eea",
                                   border: "none",
                                   boxShadow: "0 8px 25px rgba(0,0,0,0.2)",
+                                  fontSize: "clamp(0.8rem, 2vw, 1rem)",
                                 }}
                               >
                                 <FaShoppingCart className="me-2" />
-                                Shop Now
+                                <span className="d-none d-sm-inline">
+                                  Shop Now
+                                </span>
+                                <span className="d-sm-none">Shop</span>
                                 <FaArrowRight className="ms-2" />
                               </Button>
                             </motion.div>
@@ -230,15 +234,19 @@ const ProductCarousel = () => {
                                 to={`/product/${product._id}`}
                                 variant="outline-light"
                                 size="lg"
-                                className="px-4 py-3 rounded-pill fw-bold"
+                                className="px-3 px-md-4 py-2 py-md-3 rounded-pill fw-bold"
                                 whileHover="hover"
                                 style={{
                                   border: "2px solid white",
                                   color: "white",
                                   background: "transparent",
+                                  fontSize: "clamp(0.8rem, 2vw, 1rem)",
                                 }}
                               >
-                                View Details
+                                <span className="d-none d-sm-inline">
+                                  View Details
+                                </span>
+                                <span className="d-sm-none">View</span>
                               </Button>
                             </motion.div>
                           </div>
@@ -274,8 +282,8 @@ const ProductCarousel = () => {
                   }}
                 />
               </div>
-            </Carousel.Item>
-          ))}
+          </Carousel.Item>
+        ))}
       </Carousel>
     </motion.div>
   );

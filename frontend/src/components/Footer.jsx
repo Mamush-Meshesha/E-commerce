@@ -70,16 +70,17 @@ const Footer = () => {
         }}
       />
 
-      <Container className="position-relative">
+      <Container fluid className="position-relative px-3 px-md-4">
         {/* Main Footer Content */}
-        <Row className="py-5">
-          <Col lg={4} md={6} className="mb-4">
+        <Row className="py-4 py-md-5 footer-mobile-optimized footer-tablet-optimized">
+          {/* Company Info - Full width on mobile, 1/2 on tablet, 1/3 on desktop */}
+          <Col xs={12} md={6} lg={4} className="mb-4 mb-md-5">
             <motion.div variants={itemVariants}>
               <div className="d-flex align-items-center mb-3">
                 <FaShoppingCart
                   className="me-2"
                   style={{
-                    fontSize: "2rem",
+                    fontSize: "clamp(1.5rem, 4vw, 2rem)",
                     color: "#667eea",
                     filter: "drop-shadow(0 0 10px rgba(102, 126, 234, 0.3))",
                   }}
@@ -92,17 +93,24 @@ const Footer = () => {
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
+                    fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
                   }}
                 >
                   E-Commerce
                 </h4>
               </div>
-              <p className="text-light mb-4" style={{ lineHeight: "1.6" }}>
+              <p
+                className="text-light mb-4"
+                style={{
+                  lineHeight: "1.6",
+                  fontSize: "clamp(0.9rem, 2vw, 1rem)",
+                }}
+              >
                 Your one-stop destination for quality products at unbeatable
                 prices. We're committed to providing exceptional shopping
                 experiences with fast delivery and excellent customer service.
               </p>
-              <div className="d-flex gap-3">
+              <div className="d-flex gap-2 gap-md-3 flex-wrap">
                 {[
                   { icon: FaFacebook, color: "#3b5998", href: "#" },
                   { icon: FaTwitter, color: "#1da1f2", href: "#" },
@@ -114,8 +122,8 @@ const Footer = () => {
                     href={social.href}
                     className="d-flex align-items-center justify-content-center"
                     style={{
-                      width: "40px",
-                      height: "40px",
+                      width: "clamp(36px, 8vw, 40px)",
+                      height: "clamp(36px, 8vw, 40px)",
                       borderRadius: "50%",
                       background: "rgba(255,255,255,0.1)",
                       color: "white",
@@ -123,6 +131,8 @@ const Footer = () => {
                       transition: "all 0.3s ease",
                       backdropFilter: "blur(10px)",
                       border: "1px solid rgba(255,255,255,0.2)",
+                      minWidth: "44px",
+                      minHeight: "44px",
                     }}
                     whileHover={{
                       scale: 1.1,
@@ -131,16 +141,25 @@ const Footer = () => {
                     }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <social.icon />
+                    <social.icon
+                      style={{ fontSize: "clamp(0.9rem, 2vw, 1rem)" }}
+                    />
                   </motion.a>
                 ))}
               </div>
             </motion.div>
           </Col>
 
-          <Col lg={2} md={6} className="mb-4">
+          {/* Quick Links - 1/2 width on mobile, 1/2 on tablet, 1/4 on desktop */}
+          <Col xs={6} sm={6} md={6} lg={3} className="mb-4 mb-md-5">
             <motion.div variants={itemVariants}>
-              <h5 className="fw-bold mb-3" style={{ color: "#667eea" }}>
+              <h5
+                className="fw-bold mb-3"
+                style={{
+                  color: "#667eea",
+                  fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
+                }}
+              >
                 Quick Links
               </h5>
               <ul className="list-unstyled">
@@ -154,11 +173,13 @@ const Footer = () => {
                   <li key={index} className="mb-2">
                     <a
                       href={link.href}
-                      className="text-light text-decoration-none"
+                      className="text-light text-decoration-none d-block py-1"
                       style={{
                         transition: "all 0.3s ease",
-                        display: "inline-block",
-                        padding: "0.25rem 0",
+                        fontSize: "clamp(0.85rem, 2vw, 0.95rem)",
+                        minHeight: "44px",
+                        display: "flex",
+                        alignItems: "center",
                       }}
                       onMouseEnter={(e) => {
                         e.target.style.color = "#667eea";
@@ -177,72 +198,47 @@ const Footer = () => {
             </motion.div>
           </Col>
 
-          <Col lg={2} md={6} className="mb-4">
+          {/* Contact Info - 1/2 width on mobile, 1/2 on tablet, 1/2 on desktop */}
+          <Col xs={6} sm={6} md={6} lg={5} className="mb-4">
             <motion.div variants={itemVariants}>
-              <h5 className="fw-bold mb-3" style={{ color: "#667eea" }}>
-                Categories
-              </h5>
-              <ul className="list-unstyled">
-                {[
-                  "Electronics",
-                  "Clothing",
-                  "Home & Garden",
-                  "Sports",
-                  "Books",
-                  "Beauty",
-                ].map((category, index) => (
-                  <li key={index} className="mb-2">
-                    <a
-                      href="#"
-                      className="text-light text-decoration-none"
-                      style={{
-                        transition: "all 0.3s ease",
-                        display: "inline-block",
-                        padding: "0.25rem 0",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.color = "#667eea";
-                        e.target.style.transform = "translateX(5px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.color = "#bdc3c7";
-                        e.target.style.transform = "translateX(0)";
-                      }}
-                    >
-                      {category}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          </Col>
-
-          <Col lg={4} md={6} className="mb-4">
-            <motion.div variants={itemVariants}>
-              <h5 className="fw-bold mb-3" style={{ color: "#667eea" }}>
+              <h5
+                className="fw-bold mb-3"
+                style={{
+                  color: "#667eea",
+                  fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
+                }}
+              >
                 Contact Info
               </h5>
               <div className="space-y-3">
-                <div className="d-flex align-items-center mb-3">
+                <div className="d-flex align-items-center mb-3 contact-item">
                   <div
-                    className="d-flex align-items-center justify-content-center me-3"
+                    className="d-flex align-items-center justify-content-center me-3 flex-shrink-0"
                     style={{
-                      width: "40px",
-                      height: "40px",
+                      width: "clamp(36px, 8vw, 40px)",
+                      height: "clamp(36px, 8vw, 40px)",
                       borderRadius: "50%",
                       background:
                         "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                       color: "white",
+                      minWidth: "44px",
+                      minHeight: "44px",
                     }}
                   >
-                    <FaEnvelope />
+                    <FaEnvelope
+                      style={{ fontSize: "clamp(0.9rem, 2vw, 1rem)" }}
+                    />
                   </div>
-                  <div>
-                    <p className="mb-0 text-light">Email</p>
+                  <div className="flex-grow-1">
+                    <p className="mb-0 text-light small">Email</p>
                     <a
                       href="mailto:info@ecommerce.com"
-                      className="text-decoration-none"
-                      style={{ color: "#667eea" }}
+                      className="text-decoration-none d-block"
+                      style={{
+                        color: "#667eea",
+                        fontSize: "clamp(0.85rem, 2vw, 0.95rem)",
+                        wordBreak: "break-all",
+                      }}
                     >
                       mam@ecommerce.com
                     </a>
@@ -251,51 +247,61 @@ const Footer = () => {
 
                 <div className="d-flex align-items-center mb-3">
                   <div
-                    className="d-flex align-items-center justify-content-center me-3"
+                    className="d-flex align-items-center justify-content-center me-3 flex-shrink-0"
                     style={{
-                      width: "40px",
-                      height: "40px",
+                      width: "clamp(36px, 8vw, 40px)",
+                      height: "clamp(36px, 8vw, 40px)",
                       borderRadius: "50%",
                       background:
                         "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                       color: "white",
+                      minWidth: "44px",
+                      minHeight: "44px",
                     }}
                   >
-                    <FaPhone />
+                    <FaPhone style={{ fontSize: "clamp(0.9rem, 2vw, 1rem)" }} />
                   </div>
-                  <div>
-                    <p className="mb-0 text-light">Phone</p>
+                  <div className="flex-grow-1">
+                    <p className="mb-0 text-light small">Phone</p>
                     <a
-                      href="tel:+1234567890"
-                      className="text-decoration-none"
-                      style={{ color: "#667eea" }}
+                      href="tel:+251938301620"
+                      className="text-decoration-none d-block"
+                      style={{
+                        color: "#667eea",
+                        fontSize: "clamp(0.85rem, 2vw, 0.95rem)",
+                      }}
                     >
                       (+251) 938301620
                     </a>
                   </div>
                 </div>
 
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-start">
                   <div
-                    className="d-flex align-items-center justify-content-center me-3"
+                    className="d-flex align-items-center justify-content-center me-3 flex-shrink-0"
                     style={{
-                      width: "40px",
-                      height: "40px",
+                      width: "clamp(36px, 8vw, 40px)",
+                      height: "clamp(36px, 8vw, 40px)",
                       borderRadius: "50%",
                       background:
                         "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                       color: "white",
+                      minWidth: "44px",
+                      minHeight: "44px",
                     }}
                   >
-                    <FaMapMarkerAlt />
+                    <FaMapMarkerAlt
+                      style={{ fontSize: "clamp(0.9rem, 2vw, 1rem)" }}
+                    />
                   </div>
-                  <div>
-                    <p className="mb-0 text-light">Address</p>
-                    <span className="text-light">
-                      Addis Ababa,
-                      <br />
-                      Ethiopia
-                    </span>
+                  <div className="flex-grow-1">
+                    <p className="mb-0 text-light small">Address</p>
+                    <p
+                      className="mb-0 text-light small"
+                      style={{ fontSize: "clamp(0.8rem, 1.8vw, 0.9rem)" }}
+                    >
+                      Addis Ababa, Ethiopia
+                    </p>
                   </div>
                 </div>
               </div>
@@ -303,88 +309,60 @@ const Footer = () => {
           </Col>
         </Row>
 
-        {/* Bottom Bar */}
+        {/* Bottom Section */}
         <motion.div
           variants={itemVariants}
-          style={{
-            borderTop: "1px solid rgba(255,255,255,0.1)",
-            padding: "1.5rem 0",
-          }}
+          className="border-top border-secondary py-4"
+          style={{ borderColor: "rgba(255,255,255,0.1) !important" }}
         >
           <Row className="align-items-center">
-            <Col md={6}>
-              <p className="mb-0 text-light">
-                &copy; {currentYear} E-Commerce. All rights reserved. Made by
-                Mamush
+            <Col
+              xs={12}
+              md={6}
+              className="text-center text-md-start mb-3 mb-md-0"
+            >
+              <p
+                className="mb-0 text-light"
+                style={{ fontSize: "clamp(0.8rem, 2vw, 0.9rem)" }}
+              >
+                © {currentYear} E-Commerce. All rights reserved. Made with{" "}
                 <FaHeart
                   className="text-danger"
-                  style={{ animation: "heartbeat 1.5s ease-in-out infinite" }}
+                  style={{
+                    animation: "heartbeat 1.5s ease-in-out infinite",
+                    fontSize: "clamp(0.8rem, 2vw, 1rem)",
+                  }}
                 />{" "}
-                for our customers.
+                by Mamush
               </p>
             </Col>
-            <Col md={6} className="text-md-end mt-3 mt-md-0">
-              <div className="d-flex justify-content-md-end gap-3">
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{ fontSize: "0.9rem" }}
-                >
-                  Privacy Policy
-                </a>
-                <span className="text-light">|</span>
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{ fontSize: "0.9rem" }}
-                >
-                  Terms of Service
-                </a>
-                <span className="text-light">|</span>
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{ fontSize: "0.9rem" }}
-                >
-                  Cookie Policy
-                </a>
-              </div>
+            <Col xs={12} md={6} className="text-center text-md-end">
+              <motion.button
+                onClick={scrollToTop}
+                className="btn btn-outline-light btn-sm rounded-pill px-3 py-2 d-inline-flex align-items-center gap-2"
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "white",
+                  fontSize: "clamp(0.8rem, 2vw, 0.9rem)",
+                  minHeight: "44px",
+                }}
+                whileHover={{
+                  scale: 1.05,
+                  background: "rgba(255,255,255,0.2)",
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FaArrowUp />
+                <span className="d-none d-sm-inline">Back to Top</span>
+                <span className="d-sm-none">Top</span>
+              </motion.button>
             </Col>
           </Row>
         </motion.div>
       </Container>
 
-      {/* Scroll to Top Button */}
-      <motion.button
-        onClick={scrollToTop}
-        className="position-fixed"
-        style={{
-          bottom: "2rem",
-          right: "2rem",
-          width: "50px",
-          height: "50px",
-          borderRadius: "50%",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          border: "none",
-          color: "white",
-          fontSize: "1.2rem",
-          boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
-          zIndex: 1000,
-          cursor: "pointer",
-        }}
-        whileHover={{
-          scale: 1.1,
-          boxShadow: "0 12px 35px rgba(102, 126, 234, 0.4)",
-        }}
-        whileTap={{ scale: 0.95 }}
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        <FaArrowUp />
-      </motion.button>
-
-      {/* Add CSS for heartbeat animation */}
+      {/* CSS Animations and Mobile Optimizations */}
       <style jsx>{`
         @keyframes heartbeat {
           0% {
@@ -401,6 +379,81 @@ const Footer = () => {
           }
           70% {
             transform: scale(1);
+          }
+        }
+
+        /* Mobile Footer Optimizations */
+        @media (max-width: 575.98px) {
+          .footer-mobile-optimized {
+            padding: 1.5rem 0 !important;
+          }
+          
+          .footer-mobile-optimized .col-6 {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+          }
+          
+          .footer-mobile-optimized .col-6:first-child {
+            padding-left: 0;
+            padding-right: 0.25rem;
+          }
+          
+          .footer-mobile-optimized .col-6:last-child {
+            padding-right: 0;
+            padding-left: 0.25rem;
+          }
+          
+          .footer-mobile-optimized h5 {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.5rem !important;
+          }
+          
+          .footer-mobile-optimized ul li {
+            margin-bottom: 0.25rem !important;
+          }
+          
+          .footer-mobile-optimized ul li a {
+            font-size: 0.75rem !important;
+            min-height: 32px !important;
+            padding: 0.2rem 0 !important;
+          }
+          
+          /* Contact info mobile optimization */
+          .footer-mobile-optimized .contact-item {
+            margin-bottom: 0.5rem !important;
+          }
+          
+          .footer-mobile-optimized .contact-item .d-flex {
+            align-items: flex-start !important;
+          }
+          
+          .footer-mobile-optimized .contact-item .d-flex > div:first-child {
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px !important;
+            min-height: 28px !important;
+            margin-right: 0.5rem !important;
+          }
+          
+          .footer-mobile-optimized .contact-item .d-flex > div:first-child svg {
+            font-size: 0.7rem !important;
+          }
+          
+          .footer-mobile-optimized .contact-item .flex-grow-1 p {
+            font-size: 0.7rem !important;
+            margin-bottom: 0.1rem !important;
+          }
+          
+          .footer-mobile-optimized .contact-item .flex-grow-1 a {
+            font-size: 0.7rem !important;
+            line-height: 1.2 !important;
+          }
+        }
+
+        /* Tablet Footer Optimizations */
+        @media (min-width: 576px) and (max-width: 991.98px) {
+          .footer-tablet-optimized {
+            padding: 2rem 0 !important;
           }
         }
       `}</style>

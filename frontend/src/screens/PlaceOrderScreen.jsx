@@ -8,7 +8,10 @@ import CheckoutSteps from "../components/CheckoutSteps";
 import StripePayment from "../components/StripePayment";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
-import { useCreateOrderMutation } from "../slices/orderApiSlice";
+import {
+  useCreateOrderMutation,
+  usePayOrderMutation,
+} from "../slices/orderApiSlice";
 import { clearCartItems } from "../slices/cartSlice";
 import Message from "../components/message";
 const PlaceOrderScreen = () => {
@@ -16,6 +19,7 @@ const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+  const [payOrder] = usePayOrderMutation();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   useEffect(() => {
@@ -47,6 +51,7 @@ const PlaceOrderScreen = () => {
   const handleStripeSuccess = async (paymentIntent) => {
     setIsProcessingPayment(true);
     try {
+      // First create the order
       const res = await createOrder({
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
@@ -57,10 +62,26 @@ const PlaceOrderScreen = () => {
         totalPrice: cart.totalPrice,
         stripePaymentIntentId: paymentIntent.id,
       }).unwrap();
+
+      // Then update the order to paid status using the same API as PayPal
+      await payOrder({
+        orderId: res._id,
+        details: {
+          id: paymentIntent.id,
+          status: paymentIntent.status,
+          update_time: new Date().toISOString(),
+          email_address: cart.shippingAddress.email || "customer@example.com",
+        },
+      }).unwrap();
+
       dispatch(clearCartItems());
       navigate(`/order/${res._id}`);
+      toast.success("Payment successful!");
     } catch (err) {
-      toast.error(err);
+      console.error("Stripe payment error:", err);
+      toast.error(
+        "Payment successful but order update failed. Please contact support."
+      );
     } finally {
       setIsProcessingPayment(false);
     }

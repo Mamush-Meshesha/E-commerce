@@ -13,7 +13,7 @@ const UserListScreen = () => {
   const { data, isLoading, error, refetch } = useGetUsersQuery();
 
   // Extract users array from the API response with proper error handling
-  const users = data?.users || [];
+  const users = data || [];
 
   const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation();
 
