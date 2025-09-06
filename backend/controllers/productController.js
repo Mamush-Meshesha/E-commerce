@@ -1,98 +1,28 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModel.js";
 
-// Fallback data when database is not available
-const fallbackProducts = [
-  {
-    _id: "1",
-    name: "Sample Product 1",
-    image: "https://picsum.photos/400/300?random=1",
-    description: "This is a sample product while we connect to the database.",
-    rating: 4.5,
-    numReviews: 10,
-    price: 99.99,
-    brand: "Sample Brand",
-    category: "Electronics",
-    countInStock: 10,
-  },
-  {
-    _id: "2",
-    name: "Sample Product 2",
-    image: "https://picsum.photos/400/300?random=2",
-    description: "Another sample product for demonstration.",
-    rating: 4.0,
-    numReviews: 8,
-    price: 79.99,
-    brand: "Sample Brand",
-    category: "Electronics",
-    countInStock: 15,
-  },
-  {
-    _id: "3",
-    name: "Sample Product 3",
-    image: "https://picsum.photos/400/300?random=3",
-    description: "A third sample product for demonstration.",
-    rating: 4.8,
-    numReviews: 12,
-    price: 149.99,
-    brand: "Sample Brand",
-    category: "Electronics",
-    countInStock: 5,
-  },
-];
-
 const getProducts = asyncHandler(async (req, res) => {
-  try {
-    const pageSize = 8;
-    const page = Number(req.query.pageNumber) || 1;
-    const keyword = req.query.keyword
-      ? { name: { $regex: req.query.keyword, $options: "i" } }
-      : {};
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: "i" } }
+    : {};
 
-    const count = await Product.countDocuments({ ...keyword });
-    const products = await Product.find({ ...keyword })
-      .limit(pageSize)
-      .skip(pageSize * (page - 1));
+  const count = await Product.countDocuments({ ...keyword });
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
-    res.json({ products, page, pages: Math.ceil(count / pageSize) });
-  } catch (error) {
-    // If database is not available, return fallback data
-    console.log("Database not available, returning fallback data");
-    const pageSize = 8;
-    const page = Number(req.query.pageNumber) || 1;
-    const filteredProducts = fallbackProducts.filter(
-      (product) =>
-        !req.query.keyword ||
-        product.name.toLowerCase().includes(req.query.keyword.toLowerCase())
-    );
-
-    res.json({
-      products: filteredProducts,
-      page,
-      pages: Math.ceil(filteredProducts.length / pageSize),
-    });
-  }
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404);
-      throw new Error("Product not found");
-    }
-  } catch (error) {
-    // If database is not available, return fallback data
-    console.log("Database not available, returning fallback product");
-    const product = fallbackProducts.find((p) => p._id === req.params.id);
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404);
-      throw new Error("Product not found");
-    }
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    res.json(product);
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
   }
 });
 
@@ -191,17 +121,8 @@ const createProductReview = asyncHandler(async (req, res) => {
 
 // carousel
 const getTopProducts = asyncHandler(async (req, res) => {
-  try {
-    const products = await Product.find({}).sort({ rating: -1 }).limit(3);
-    res.status(200).json(products);
-  } catch (error) {
-    // If database is not available, return fallback data
-    console.log("Database not available, returning fallback top products");
-    const topProducts = fallbackProducts
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, 3);
-    res.status(200).json(topProducts);
-  }
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  res.status(200).json(products);
 });
 
 export {

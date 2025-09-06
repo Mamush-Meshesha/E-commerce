@@ -2,24 +2,6 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import generateToken from "../utils/generateToken.js";
 import User from "../models/userModel.js";
 
-// Fallback user data when database is not available
-const fallbackUsers = [
-  {
-    _id: "1",
-    name: "Mam User",
-    email: "mam@gmail.com",
-    password: "123456",
-    isAdmin: false,
-  },
-  {
-    _id: "2",
-    name: "Admin User",
-    email: "admin@example.com",
-    password: "admin123",
-    isAdmin: true,
-  },
-];
-
 //auth user get token
 // route   POST /api/users/login
 //access Public
@@ -27,40 +9,19 @@ const fallbackUsers = [
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
-      generateToken(res, user.id);
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      });
-    } else {
-      res.status(401);
-      throw new Error("Invalid Email Address or Password");
-    }
-  } catch (error) {
-    // If database is not available, use fallback authentication
-    console.log("Database not available, using fallback authentication");
-    const user = fallbackUsers.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (user) {
-      generateToken(res, user._id);
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      });
-    } else {
-      res.status(401);
-      throw new Error("Invalid Email Address or Password");
-    }
+  if (user && (await user.matchPassword(password))) {
+    generateToken(res, user.id);
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Email Address or Password");
   }
 });
 
@@ -71,60 +32,30 @@ const authUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
-  try {
-    const userExist = await User.findOne({ email });
+  const userExist = await User.findOne({ email });
 
-    if (userExist) {
-      res.status(400);
-      throw new Error("User already exist");
-    }
+  if (userExist) {
+    res.status(400);
+    throw new Error("User already exist");
+  }
 
-    const user = await User.create({
-      name,
-      email,
-      password,
-    });
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
 
-    if (user) {
-      generateToken(res, user.id);
-      res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      });
-    } else {
-      res.status(400);
-      throw new Error("Invalid user data");
-    }
-  } catch (error) {
-    // If database is not available, check fallback users
-    console.log("Database not available, checking fallback users");
-    const userExist = fallbackUsers.find((u) => u.email === email);
-
-    if (userExist) {
-      res.status(400);
-      throw new Error("User already exist");
-    }
-
-    // Create a new fallback user
-    const newUser = {
-      _id: (fallbackUsers.length + 1).toString(),
-      name,
-      email,
-      password,
-      isAdmin: false,
-    };
-
-    fallbackUsers.push(newUser);
-
-    generateToken(res, newUser._id);
+  if (user) {
+    generateToken(res, user.id);
     res.status(201).json({
-      _id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      isAdmin: newUser.isAdmin,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
     });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
   }
 });
 
@@ -146,36 +77,18 @@ const logoutUser = asyncHandler(async (req, res) => {
 // access Public
 
 const getUserProfile = asyncHandler(async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id);
 
-    if (user) {
-      res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      });
-    } else {
-      res.status(404);
-      throw new Error("user not found");
-    }
-  } catch (error) {
-    // If database is not available, use fallback data
-    console.log("Database not available, using fallback user profile");
-    const user = fallbackUsers.find((u) => u._id === req.user._id);
-
-    if (user) {
-      res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      });
-    } else {
-      res.status(404);
-      throw new Error("user not found");
-    }
+  if (user) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("user not found");
   }
 });
 
